@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Focus — Photography of Performance</title>
+<meta name="description" content="Grand Focus fotografa performance, não pose. Fotografia especializada em dança — ensaios, espetáculos e cobertura para escolas de dança.">
+<link rel="icon" href="assets/logo-icone.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --palco:#2B0210;
+  --vinho:#4B0416;
+  --vinho-alto:#5C0A1E;
+  --ouro-luz:#EFD7A7;
+  --ouro:#C8AF7F;
+  --ouro-fundo:#A48656;
+  --papel:#F6F0E6;
+  --tinta:#1A0A0E;
+  --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Jost","Futura",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--palco);color:#EADFCF;
+  font-family:var(--sans);font-weight:300;font-size:16.5px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 6vw;}
+.eyebrow{
+  font-family:var(--sans);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--ouro);font-weight:500;margin-bottom:14px;
+}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;color:var(--ouro-luz);}
+.btn{
+  display:inline-flex;align-items:center;gap:.5em;font-family:var(--sans);font-size:13px;
+  letter-spacing:.18em;text-transform:uppercase;font-weight:500;padding:.95em 1.8em;
+  border-radius:2px;border:1px solid var(--ouro);transition:all .25s ease;cursor:pointer;
+}
+.btn-ouro{background:var(--ouro);color:var(--tinta);}
+.btn-ouro:hover{background:var(--ouro-luz);border-color:var(--ouro-luz);}
+.btn-fora{background:transparent;color:var(--ouro-luz);}
+.btn-fora:hover{background:rgba(200,175,127,.1);}
+
+/* ── header ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(43,2,16,.82);
+  backdrop-filter:blur(10px);border-bottom:1px solid rgba(200,175,127,.14);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;max-width:1180px;margin:0 auto;}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-brand img{width:40px;height:40px;object-fit:contain;}
+.nav-brand .wordmark{font-family:var(--serif);font-size:20px;letter-spacing:.08em;color:var(--ouro-luz);}
+.nav-brand .wordmark small{display:block;font-family:var(--sans);font-size:8.5px;letter-spacing:.28em;color:var(--ouro-fundo);font-weight:400;margin-top:1px;}
+.nav-links{display:flex;align-items:center;gap:34px;}
+.nav-links a{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#DBC9A8;transition:color .2s;}
+.nav-links a:hover{color:var(--ouro-luz);}
+.nav-toggle{display:none;background:none;border:none;color:var(--ouro-luz);font-size:24px;cursor:pointer;}
+@media(max-width:860px){
+  .nav-links{position:fixed;top:73px;left:0;right:0;background:var(--vinho);flex-direction:column;
+    align-items:flex-start;padding:22px 6vw 30px;gap:20px;border-bottom:1px solid rgba(200,175,127,.18);
+    transform:translateY(-140%);opacity:0;transition:all .3s ease;pointer-events:none;}
+  .nav-links.open{transform:translateY(0);opacity:1;pointer-events:auto;}
+  .nav-toggle{display:block;}
+}
+
+/* ── hero ── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:150px 6vw 40px;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 28%, #58061C 0%, #3A0311 45%, #2B0210 78%);
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.012) 3px);
+  pointer-events:none;
+}
+.hero-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;padding:30px 0;}
+.hero-icon{width:104px;margin:0 auto 30px;opacity:.95;filter:drop-shadow(0 0 26px rgba(200,175,127,.35));}
+.hero .eyebrow{justify-content:center;}
+.hero h1{
+  font-size:clamp(34px,6vw,64px);line-height:1.14;max-width:15ch;margin:0 auto 26px;
+  font-weight:400;
+}
+.hero h1 em{font-style:italic;color:var(--ouro);}
+.hero .lede{
+  font-size:19px;color:#F0E6D6;font-weight:200;max-width:46ch;margin:0 auto 40px;line-height:1.65;
+}
+.hero-ctas{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.hero-scroll{
+  flex-shrink:0;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--ouro-fundo);
+  display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;
+}
+.hero-scroll .ln{width:1px;height:38px;background:linear-gradient(var(--ouro-fundo),transparent);}
+
+/* ── section shell ── */
+section{padding:110px 0;}
+.section-head{max-width:640px;margin:0 auto 56px;text-align:center;}
+.section-head h2{font-size:clamp(26px,4vw,40px);line-height:1.25;}
+.section-head p{color:#D8C9B6;font-size:16px;margin-top:16px;}
+.sobre{background:var(--palco);}
+.sobre .wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;}
+.sobre .ph{
+  aspect-ratio:4/5;border-radius:2px;background:linear-gradient(160deg,#3A0311,#1A0A0E);
+  border:1px solid rgba(200,175,127,.18);display:flex;align-items:center;justify-content:center;
+  color:var(--ouro-fundo);font-family:var(--serif);font-size:15px;text-align:center;padding:2em;
+}
+.sobre .txt .eyebrow{margin-bottom:18px;}
+.sobre .txt h2{font-size:clamp(24px,3.4vw,34px);margin-bottom:22px;line-height:1.3;}
+.sobre .txt p{color:#D8C9B6;font-size:16px;margin-bottom:16px;}
+@media(max-width:860px){.sobre .wrap{grid-template-columns:1fr;gap:40px;}}
+
+/* ── portfólio ── */
+.portfolio{background:var(--vinho);}
+.pf-filtros{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;}
+.pf-filtro{
+  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;padding:.6em 1.3em;
+  border:1px solid rgba(200,175,127,.3);border-radius:2px;color:#DBC9A8;cursor:pointer;transition:all .2s;
+}
+.pf-filtro.on,.pf-filtro:hover{background:var(--ouro);border-color:var(--ouro);color:var(--tinta);}
+.pf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.pf-item{
+  aspect-ratio:3/4;position:relative;overflow:hidden;border-radius:2px;
+  background:linear-gradient(155deg,#5C0A1E,#2B0210);cursor:pointer;
+}
+.pf-item .fill{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;color:var(--ouro-fundo);opacity:.85;transition:opacity .3s;
+}
+.pf-item .fill svg{width:34px;height:34px;opacity:.6;}
+.pf-item .fill span{font-family:var(--serif);font-size:14px;letter-spacing:.04em;}
+.pf-item::after{
+  content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(26,10,14,.85),transparent 55%);
+  opacity:0;transition:opacity .3s;
+}
+.pf-item:hover::after{opacity:1;}
+.pf-item .cat{
+  position:absolute;left:16px;bottom:14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ouro-luz);opacity:0;transform:translateY(6px);transition:all .3s;
+}
+.pf-item:hover .cat{opacity:1;transform:translateY(0);}
+@media(max-width:860px){.pf-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.pf-grid{grid-template-columns:1fr;}}
+
+/* ── serviços ── */
+.servicos{background:var(--palco);}
+.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,175,127,.16);border:1px solid rgba(200,175,127,.16);}
+.sv-card{background:var(--palco);padding:44px 34px;}
+.sv-card .n{font-family:var(--serif);font-size:13px;color:var(--ouro-fundo);letter-spacing:.05em;}
+.sv-card h3{font-family:var(--serif);font-weight:500;font-size:23px;color:var(--ouro-luz);margin:16px 0 14px;}
+.sv-card p{color:#CBBBA5;font-size:14.5px;line-height:1.65;}
+@media(max-width:860px){.sv-grid{grid-template-columns:1fr;}}
+
+/* ── área do cliente (teaser da galeria) ── */
+.galeria-cta{
+  background:linear-gradient(120deg,#3A0311,#1A0A0E 70%);border-top:1px solid rgba(200,175,127,.16);
+  border-bottom:1px solid rgba(200,175,127,.16);
+}
+.galeria-cta .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center;}
+.galeria-cta h2{font-size:clamp(24px,3.4vw,34px);margin-bottom:20px;line-height:1.3;}
+.galeria-cta p{color:#D8C9B6;font-size:16px;margin-bottom:28px;}
+.galeria-features{list-style:none;padding:0;margin:0 0 32px;display:flex;flex-direction:column;gap:14px;}
+.galeria-features li{display:flex;align-items:flex-start;gap:12px;font-size:14.5px;color:#DBC9A8;}
+.galeria-features svg{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--ouro);}
+.galeria-card{
+  border:1px solid rgba(200,175,127,.28);border-radius:2px;padding:38px 34px;background:rgba(75,4,22,.35);
+  text-align:center;
+}
+.galeria-card .icone{width:52px;margin:0 auto 20px;opacity:.85;}
+.galeria-card h3{font-size:21px;color:var(--ouro-luz);margin-bottom:10px;}
+.galeria-card p{color:#C9B9A4;font-size:13.5px;margin-bottom:24px;}
+@media(max-width:860px){.galeria-cta .wrap{grid-template-columns:1fr;gap:40px;}}
+
+/* ── contato ── */
+.contato{background:var(--vinho);text-align:center;}
+.contato .section-head{margin-bottom:40px;}
+.contato-canais{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.canal{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.canal svg{width:26px;height:26px;color:var(--ouro);}
+.canal b{font-family:var(--serif);font-size:17px;color:var(--ouro-luz);font-weight:500;}
+.canal span{font-size:12.5px;color:#C9B9A4;letter-spacing:.06em;}
+
+/* ── footer ── */
+footer{background:var(--tinta);padding:44px 6vw 30px;text-align:center;}
+footer img{width:34px;margin:0 auto 14px;opacity:.8;}
+footer .marca{font-family:var(--serif);font-size:18px;letter-spacing:.12em;color:var(--ouro);}
+footer .sub{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ouro-fundo);margin-top:6px;}
+footer .legal{margin-top:26px;font-size:11.5px;color:#8A7461;}
+footer .social{display:flex;gap:20px;justify-content:center;margin-top:22px;}
+footer .social a{width:34px;height:34px;border:1px solid rgba(200,175,127,.28);border-radius:50%;display:grid;place-items:center;color:var(--ouro-luz);transition:all .2s;}
+footer .social a:hover{background:var(--ouro);color:var(--tinta);border-color:var(--ouro);}
+footer .social svg{width:15px;height:15px;}
+
+/* ── nota de edição (visível só localmente, tirar antes de publicar) ── */
+.nota-edicao{background:#111;color:#EFD7A7;font-family:var(--sans);font-size:12px;text-align:center;padding:8px;letter-spacing:.04em;}
+.nota-edicao b{color:#fff;}
+</style>
+</head>
+<body>
+
+<div class="nota-edicao">🚧 Rascunho de trabalho — textos entre <b>[colchetes]</b> e a grade de portfólio são placeholders até entrarem fotos e conteúdo reais.</div>
+
+<header>
+  <div class="nav">
+    <a href="#top" class="nav-brand">
+      <img src="assets/logo-icone.png" alt="Grand Focus">
+      <span class="wordmark">Grand Focus<small>Photography of Performance</small></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#sobre">Sobre</a>
+      <a href="#portfolio">Portfólio</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#galeria">Área do Cliente</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<div id="top"></div>
+<section class="hero">
+  <div class="hero-content">
+    <img class="hero-icon" src="assets/logo-icone.png" alt="Grand Focus">
+    <div class="eyebrow">Fotografia especializada em dança</div>
+    <h1>O instante em que o <em>movimento</em> escapa do enquadramento</h1>
+    <p class="lede">Grand Focus fotografa performance, não pose. Ensaios, espetáculos e a memória de cada escola de dança — registrados com a precisão de quem entende o palco.</p>
+    <div class="hero-ctas">
+      <a href="#portfolio" class="btn btn-ouro">Ver portfólio</a>
+      <a href="#contato" class="btn btn-fora">Falar com a Grand Focus</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Role</span><div class="ln"></div></div>
+</section>
+
+<section class="sobre" id="sobre">
+  <div class="wrap">
+    <div class="ph">[ foto em destaque — retrato autoral da fotógrafa ou uma imagem-assinatura do trabalho ]</div>
+    <div class="txt">
+      <div class="eyebrow">Sobre</div>
+      <h2>Uma fotografia que entende o tempo da dança</h2>
+      <p>[Parágrafo curto contando a história da Grand Focus — quem fotografa, há quanto tempo, e por que a especialidade é dança. Ex: formação, companhias que já cobriu, o que motivou o nome "Grand Focus".]</p>
+      <p>[Segundo parágrafo, mais sobre o método: como o grand jeté da marca resume a proposta — capturar o auge do movimento, não a pose armada.]</p>
+    </div>
+  </div>
+</section>
+
+<section class="portfolio" id="portfolio">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Portfólio</div>
+      <h2>Trabalhos em cena</h2>
+      <p>[Trocar os quadros abaixo pelas fotos reais assim que estiverem selecionadas — a grade já está pronta para receber imagens no formato retrato 3:4.]</p>
+    </div>
+    <div class="pf-filtros">
+      <button class="pf-filtro on">Tudo</button>
+      <button class="pf-filtro">Ballet</button>
+      <button class="pf-filtro">Contemporâneo</button>
+      <button class="pf-filtro">Espetáculos</button>
+      <button class="pf-filtro">Ensaios</button>
+    </div>
+    <div class="pf-grid" id="pfGrid"></div>
+  </div>
+</section>
+
+<section class="servicos" id="servicos">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Serviços</div>
+      <h2>Como a Grand Focus trabalha com você</h2>
+    </div>
+    <div class="sv-grid">
+      <div class="sv-card">
+        <div class="n">01</div>
+        <h3>Cobertura de espetáculos</h3>
+        <p>[Descrição do serviço — cobertura completa de apresentações, mostras e recitais, com entrega organizada por número/coreografia.]</p>
+      </div>
+      <div class="sv-card">
+        <div class="n">02</div>
+        <h3>Ensaios individuais</h3>
+        <p>[Descrição — sessões autorais para bailarinos e bailarinas, em estúdio ou locação, com direção de movimento.]</p>
+      </div>
+      <div class="sv-card">
+        <div class="n">03</div>
+        <h3>Parceria com escolas</h3>
+        <p>[Descrição — pacotes recorrentes para escolas de dança, com galeria digital própria para cada turma/aluno.]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="galeria-cta" id="galeria">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Área do cliente</div>
+      <h2>Uma galeria digital para cada escola, cada aluno</h2>
+      <p>Depois de cada evento ou ensaio, as fotos são organizadas em uma galeria própria — cada escola de dança tem seu espaço, e dentro dele, cada aluno encontra só as suas fotos, prontas para baixar.</p>
+      <ul class="galeria-features">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg> Login próprio para cada escola de dança</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg> Cada aluno vê e baixa só as fotos dele</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg> Bailarinos avulsos também têm seu próprio espaço, sem precisar estar vinculados a uma escola</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg> Download organizado, sem bagunça de pasta ou link perdido</li>
+      </ul>
+    </div>
+    <div class="galeria-card">
+      <img class="icone" src="assets/logo-icone.png" alt="">
+      <h3>Já é cliente?</h3>
+      <p>Acesse a galeria digital da sua escola ou o seu álbum individual.</p>
+      <a href="https://galeria.grandfocus.com.br" class="btn btn-ouro" style="width:100%;justify-content:center;">Entrar na galeria</a>
+    </div>
+  </div>
+</section>
+
+<section class="contato" id="contato">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Contato</div>
+      <h2>Vamos fotografar seu próximo espetáculo</h2>
+      <p>[Frase curta de convite para contato — pode reforçar prazo de resposta ou região de atuação.]</p>
+    </div>
+    <div class="contato-canais">
+      <a class="canal" href="https://wa.me/[SEU_NUMERO]" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21l1.65-4.95A9 9 0 1 1 8.4 19.4L3 21z"/></svg>
+        <b>WhatsApp</b><span>[preencher número]</span>
+      </a>
+      <a class="canal" href="mailto:[contato@grandfocus.com.br]">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <b>E-mail</b><span>[contato@grandfocus.com.br]</span>
+      </a>
+      <a class="canal" href="https://instagram.com/[perfil]" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        <b>Instagram</b><span>[preencher @]</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="assets/logo-icone.png" alt="Grand Focus">
+  <div class="marca">GRAND FOCUS</div>
+  <div class="sub">Photography of Performance</div>
+  <div class="social">
+    <a href="https://instagram.com/[perfil]" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+    </a>
+    <a href="https://wa.me/[SEU_NUMERO]" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21l1.65-4.95A9 9 0 1 1 8.4 19.4L3 21z"/></svg>
+    </a>
+  </div>
+  <div class="legal">© <span id="ano"></span> Grand Focus — Photography of Performance. Todos os direitos reservados.</div>
+</footer>
+
+<script>
+// menu mobile
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open')
+})
+document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+  document.getElementById('navLinks').classList.remove('open')
+}))
+
+document.getElementById('ano').textContent = new Date().getFullYear()
+
+// grade de portfólio — placeholders até entrarem fotos reais
+const CATS = ['Ballet','Contemporâneo','Espetáculos','Ensaios','Ballet','Contemporâneo','Espetáculos','Ensaios','Ballet']
+const grid = document.getElementById('pfGrid')
+grid.innerHTML = CATS.map(cat => `
+  <div class="pf-item" data-cat="${cat}">
+    <div class="fill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+      <span>[foto]</span>
+    </div>
+    <div class="cat">${cat}</div>
+  </div>
+`).join('')
+
+document.querySelectorAll('.pf-filtro').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pf-filtro').forEach(b => b.classList.remove('on'))
+    btn.classList.add('on')
+    const f = btn.textContent.trim()
+    document.querySelectorAll('.pf-item').forEach(item => {
+      item.style.display = (f === 'Tudo' || item.dataset.cat === f) ? '' : 'none'
+    })
+  })
+})
+</script>
+
+</body>
+</html>
