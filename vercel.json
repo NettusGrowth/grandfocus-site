@@ -1,13 +1,17 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": true,
+  "buildCommand": "node scripts/build-landing.cjs",
+  "outputDirectory": "dist",
   "headers": [
     {
-      "source": "/backend/(.*)",
+      "source": "/admin/captacao/(.*)",
       "headers": [
         {
           "key": "X-Robots-Tag",
-          "value": "noindex"
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     },
@@ -19,12 +23,6 @@
           "value": "nosniff"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/backend/:path*",
-      "destination": "/404.html"
     }
   ]
 }
