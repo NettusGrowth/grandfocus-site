@@ -1,0 +1,9 @@
+# Landing pages Grand Focus — preview 2026-11-18
+- Quatro rotas HTML estático; CSS e JS compartilhados em /landing. A/B difere apenas no hero e nos identificadores/canonical.
+- Produção bloqueada: launchApproved e adsEnabled false, PRODUCTION false no Edge Function. Preview usa exclusivamente fixture TESTE GF. Não coletar dados reais antes da política e portfólio aprovados.
+- Fotografias não incluídas: nenhum arquivo com autorização publicitária foi encontrado na base do site. Hero editorial usa somente logo original; adicionar fotografias reais autorizadas antes do lançamento. Não usar fotos privadas da galeria.
+- SQL isolado em backend/gf_marketing_leads.sql; função em backend/gf-marketing-leads.ts. IDs opacos, deduplicação, RLS, SQL invoker, service_role apenas no servidor; sem mexer nas tabelas existentes. A gestão inicial é via Supabase Dashboard > gf_marketing_leads (filtrar is_test=false; CSV restrito). Interface de CRM e teste autenticado pendentes.
+- A/B com URLs separadas; nenhuma randomização automática. No Ads: fase inicial landing A para todos os criativos; fase seguinte experimento 50/50 pelo gestor. Não misturar B2C.
+- Google Tag confirmada no briefing, mas rastreamento DESLIGADO em preview e produção. Após política/consentimento e QA: ativar config somente com aprovação; uma conversão B2B após created=true. GA4 e GTM ainda não fornecidos. Não ativar campanhas.
+- Rascunho de privacidade em /privacidade/; contato oficial, retenção, base legal e identificação do controlador pendentes. Não indexar antes da aprovação.
+- Antes de lançar: revisar período e agenda, fotos, política, teste real backend, Tag Assistant, QA mobile/desktop e acesso de super admin. Ativar produção somente após aceite. Rollback: reverter o commit isolado e desabilitar endpoint.
