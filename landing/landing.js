@@ -17,7 +17,7 @@
     const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+encodeURIComponent(c.adsTag);document.head.appendChild(s);tagReady=true
   }
   function preference(v){allowed=v;storage.set(prefKey,v?"yes":"no");privacy.hidden=true;if(v)enableTag();else if(tagReady)window.gtag?.("consent","update",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"})}
-  if(consentSaved)preference(consentSaved==="yes");else privacy.hidden=false;
+  if(consentSaved)preference(consentSaved==="yes");else privacy.hidden=true;
   document.getElementById("consent-no").onclick=()=>preference(false);
   document.getElementById("consent-yes").onclick=()=>preference(true);
   document.getElementById("privacy-settings").onclick=()=>{privacy.hidden=false;privacy.scrollIntoView({block:"nearest"})};
@@ -37,15 +37,15 @@
     return o
   }
   function notice(s,error=false,success=false){msg.textContent=s;msg.dataset.error=String(error);msg.dataset.success=String(success);msg.focus()}
-  const fill=document.getElementById("test-fill");
+  const fill=document.getElementById("test-fill"); const submitLabel=submit.textContent;
   if(live){["preview-alert","test-note","test-fill"].forEach(id=>document.getElementById(id).hidden=true);}
-  else fill.onclick=()=>{f.elements.name.value="TESTE GF";if(f.elements.school_name)f.elements.school_name.value="ESCOLA TESTE GF";f.elements.city.value="Cidade teste";f.elements.state.value="SP";f.elements.phone.value="11900000000";if(f.elements.role)f.elements.role.value="direcao";if(f.elements.adult_confirmed)f.elements.adult_confirmed.checked=true;if(f.dataset.funnel==="b2c")f.elements.interest_type.value="artistico";f.elements.event_date.value="teste";f.elements.marketing.checked=false;};
+  else fill.onclick=()=>{f.elements.name.value="TESTE GF";if(f.elements.school_name)f.elements.school_name.value="ESCOLA TESTE GF";f.elements.city.value="Cidade teste";f.elements.state.value="SP";f.elements.phone.value="11900000000";if(f.elements.role)f.elements.role.value="direcao";if(f.elements.adult_confirmed)f.elements.adult_confirmed.checked=true;if(f.dataset.funnel==="b2c")f.elements.interest_type.value="artistico";if(f.elements.event_date)f.elements.event_date.value="teste";if(f.elements.marketing)f.elements.marketing.checked=false;};
   f.addEventListener("submit",async e=>{
     e.preventDefault();if(busy||!f.reportValidity())return;
-    const data=Object.fromEntries(new FormData(f));data.marketing=f.elements.marketing.checked;data.adult_confirmed=!!f.elements.adult_confirmed?.checked;
+    const data=Object.fromEntries(new FormData(f));data.marketing=!!f.elements.marketing?.checked;data.adult_confirmed=!!f.elements.adult_confirmed?.checked;
     const digits=String(data.phone||"").replace(/\D/g,"");const national=(digits.length===12||digits.length===13)&&digits.startsWith("55")?digits.slice(2):digits;
     if(!/^[1-9][1-9]\d{8,9}$/.test(national)){notice("Informe um WhatsApp brasileiro válido com DDD.",true);event("gf_form_error",{code:"validation"});f.elements.phone.focus();return}
-    data.phone=national;data.funnel=f.dataset.funnel;data.landing_id=f.dataset.landing;data.variant_id=f.dataset.variant;data.offer_type=f.dataset.offer;data.page_version=c.version;data.policy_version=c.policyVersion;data.measurement=allowed&&live;data.attribution=live?attribution():{};data.test=!live;
+    if(!live)data.event_date="teste"; if(f.dataset.funnel==="b2b")data.interest_type=f.dataset.offer; data.phone=national;data.funnel=f.dataset.funnel;data.landing_id=f.dataset.landing;data.variant_id=f.dataset.variant;data.offer_type=f.dataset.offer;data.page_version=c.version;data.policy_version=c.policyVersion;data.measurement=allowed&&live;data.attribution=live?attribution():{};data.test=!live;
     if(!live&&(data.name!=="TESTE GF"||data.phone!=="11900000000"||data.city!=="Cidade teste"||(data.funnel==="b2b"&&data.school_name!=="ESCOLA TESTE GF")||data.notes)){notice("Use apenas os dados fictícios do botão de teste.",true);return}
     const fingerprint=JSON.stringify(data);if(lastPayload!==fingerprint||!key){key=crypto.randomUUID();lastPayload=fingerprint}data.idempotency_key=key;
     busy=true;submit.disabled=true;submit.textContent="Enviando seu interesse…";msg.textContent="";
@@ -58,8 +58,13 @@
         }
         event(f.dataset.funnel==="b2b"?"gf_b2b_lead_success":"gf_b2c_interest_success");
       }
-      notice(!live?"Teste registrado no ambiente de validação. Nenhuma conversão publicitária foi enviada.":!result.created?"Seu interesse já foi registrado. Nossa equipe poderá dar continuidade ao atendimento.":data.funnel==="b2b"?"Recebemos seu interesse! Vamos entrar em contato para conhecer sua escola e avaliar a melhor proposta.":"Seu interesse foi registrado! Isso não reserva uma sessão nem gera cobrança. Entraremos em contato quando houver uma proposta disponível.",false,true);
+      document.getElementById("form-content").hidden=true;
+      const thanks=document.getElementById("thank-you");thanks.hidden=false;
+      document.getElementById("success-detail").textContent=!live?"Cadastro fictício confirmado. Nenhuma conversão enviada.":!result.created?"Seu interesse já estava registrado.":"Obrigado pela confiança.";
+      const wa=document.getElementById("whatsapp-next");
+      if(live&&/^55[1-9][1-9][0-9]{8,9}$/.test(c.whatsapp||"")){wa.href="https://wa.me/"+c.whatsapp;wa.hidden=false}
+      thanks.focus();thanks.scrollIntoView({block:"nearest"});
     }catch{event("gf_form_error",{code:"network_or_api"});notice("Não conseguimos registrar seu interesse agora. Confira sua conexão e tente novamente. Seus dados continuam preenchidos.",true)}
-    finally{busy=false;submit.disabled=false;submit.textContent=f.dataset.funnel==="b2b"?"Solicitar contato":"Registrar meu interesse"}
+    finally{busy=false;submit.disabled=false;submit.textContent=submitLabel}
   });
 })();
