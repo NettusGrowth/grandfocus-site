@@ -35,7 +35,7 @@ function createPage([file, landing, variant, offer], opts = {}) {
   const callbacks = {};
   const elements = {
     name:{value:'PERSONAGEM FICTICIO'}, school_name:{value:'ESCOLA FICTICIA'},
-    phone:{value:opts.phone ?? '11900000000'}, city:{value:'Cidade ficticia'},
+    phone:{value:opts.phone ?? '11900000000',focus(){}}, city:{value:'Cidade ficticia'},
     state:{value:'SP'}, role:{value:'direcao'}, notes:{value:''},
     event_date:{value:''}, marketing:{checked:false}
   };
