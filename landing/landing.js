@@ -64,7 +64,7 @@
         event(f.dataset.funnel==="b2b"?"gf_b2b_lead_success":"gf_b2c_interest_success");
       }
       document.getElementById("form-content").hidden=true;
-      const consentHost=document.getElementById("interesse");if(consentHost){consentHost.appendChild(privacy);privacy.hidden=true;}
+      const consentHost=document.getElementById("interesse");if(consentHost&&!privacy.classList.contains("gf-cookie-choice")){consentHost.appendChild(privacy);privacy.hidden=true;}
       const thanks=document.getElementById("thank-you");thanks.hidden=false;
       document.getElementById("success-detail").textContent=!live?"Cadastro fictício confirmado. Nenhuma conversão enviada.":!result.created?"Seu interesse já estava registrado.":"Obrigado pela confiança.";
       const wa=document.getElementById("whatsapp-next");
