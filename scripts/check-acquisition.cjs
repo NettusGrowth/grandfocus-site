@@ -35,6 +35,17 @@ for (const [file, id] of routes) {
   requireTrue(html.includes('/landing/landing.js') && html.includes('/landing/config.js'), `${file}: missing lead form scripts`);
   requireTrue(!text.includes('sao carlos') && !text.includes('2027'), `${file}: retired regional/dated offer copy detected`);
 }
+const retiredBlockRoutes = [
+  'index.html', 'bastidores/index.html', 'experiencias/index.html', 'especiais/index.html',
+  'ensaios/danca/index.html', 'escolas/espetaculos/index.html',
+  'escolas/espetaculos-b/index.html', 'escolas/natal/index.html'
+];
+for (const file of retiredBlockRoutes) {
+  const html = fs.readFileSync(path.join('dist', file), 'utf8');
+  requireTrue(!/class="(?:trust|condition)"/.test(html), `${file}: retired trust/condition block reintroduced`);
+  requireTrue(!html.includes('Atendimento direto pela Grand Focus'), `${file}: retired reassurance message reintroduced`);
+  requireTrue(html.includes('</section></div><footer>'), `${file}: form should transition directly to footer`);
+}
 const config = fs.readFileSync(path.join('dist', 'landing/config.js'), 'utf8');
 const handler = fs.readFileSync(path.join('dist', 'landing/landing.js'), 'utf8');
 requireTrue(/launchApproved:true/.test(config), 'Launch configuration is unexpectedly disabled');
