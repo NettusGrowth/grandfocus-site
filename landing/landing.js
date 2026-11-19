@@ -25,7 +25,6 @@
   document.getElementById("consent-no").onclick=()=>preference(false);
   document.getElementById("consent-yes").onclick=()=>preference(true);
   document.getElementById("privacy-settings").onclick=()=>{privacy.hidden=false;privacy.scrollIntoView({block:"nearest"})};
-  if(new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date()).replace(/-/g,"")>"20261219"){document.querySelectorAll("[data-seasonal]").forEach(e=>e.textContent="Consulte sua cidade e data.")}
   function event(name,params={}){
     if(!live||!allowed)return;
     // GA4/GTM not installed until verified IDs have been supplied.
