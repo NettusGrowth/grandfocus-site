@@ -3,7 +3,8 @@
   "use strict";
   const c=window.GF_LANDING_CONFIG, f=document.getElementById("lead-form");if(!c||!f)return;
   const prod=location.hostname==="www.grandfocus.com.br"||location.hostname==="grandfocus.com.br";
-  const live=prod&&c.launchApproved;
+  const live=prod&&c.launchApproved&&f.dataset.landing==='b2b_spectacle_a';
+  if(prod&&f.dataset.landing!=='b2b_spectacle_a'){location.replace('/');return;}
   const privacy=document.getElementById("consent"),msg=document.getElementById("form-message"),submit=f.querySelector("[type=submit]");
   const prefKey="gf-marketing-consent-v1";let allowed=false,tagReady=false,busy=false,key=null,lastPayload=null,started=false,emitted=new Set();
   const storage={get(k){try{return sessionStorage.getItem(k)}catch{return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch{}}};
@@ -38,10 +39,11 @@
   }
   function notice(s,error=false,success=false){msg.textContent=s;msg.dataset.error=String(error);msg.dataset.success=String(success);msg.focus()}
   const fill=document.getElementById("test-fill"); const submitLabel=submit.textContent;
-  if(live){["preview-alert","test-note","test-fill"].forEach(id=>document.getElementById(id).hidden=true);}
-  else fill.onclick=()=>{f.elements.name.value="TESTE GF";if(f.elements.school_name)f.elements.school_name.value="ESCOLA TESTE GF";f.elements.city.value="Cidade teste";f.elements.state.value="SP";f.elements.phone.value="11900000000";if(f.elements.role)f.elements.role.value="direcao";if(f.elements.adult_confirmed)f.elements.adult_confirmed.checked=true;if(f.dataset.funnel==="b2c")f.elements.interest_type.value="artistico";if(f.elements.event_date)f.elements.event_date.value="teste";if(f.elements.marketing)f.elements.marketing.checked=false;};
+  if(live){["preview-alert","test-note","test-fill"].forEach(id=>{const node=document.getElementById(id);if(node)node.hidden=true});}
+  else if(fill) fill.onclick=()=>{f.elements.name.value="TESTE GF";if(f.elements.school_name)f.elements.school_name.value="ESCOLA TESTE GF";f.elements.city.value="Cidade teste";f.elements.state.value="SP";f.elements.phone.value="11900000000";if(f.elements.role)f.elements.role.value="direcao";if(f.elements.adult_confirmed)f.elements.adult_confirmed.checked=true;if(f.dataset.funnel==="b2c")f.elements.interest_type.value="artistico";if(f.elements.event_date)f.elements.event_date.value="teste";if(f.elements.marketing)f.elements.marketing.checked=false;};
+  if(!live&&!fill){submit.disabled=true;msg.textContent="Envio disponível no domínio oficial grandfocus.com.br.";}
   f.addEventListener("submit",async e=>{
-    e.preventDefault();if(busy||!f.reportValidity())return;
+    e.preventDefault();if((!live&&!fill)||busy||!f.reportValidity())return;
     const data=Object.fromEntries(new FormData(f));data.marketing=!!f.elements.marketing?.checked;data.adult_confirmed=!!f.elements.adult_confirmed?.checked;
     const digits=String(data.phone||"").replace(/\D/g,"");const national=(digits.length===12||digits.length===13)&&digits.startsWith("55")?digits.slice(2):digits;
     if(!/^[1-9][1-9]\d{8,9}$/.test(national)){notice("Informe um WhatsApp brasileiro válido com DDD.",true);event("gf_form_error",{code:"validation"});f.elements.phone.focus();return}
