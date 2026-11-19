@@ -1,5 +1,5 @@
-// Production remains locked until release validation is complete.
-const PRODUCTION=false;
+// Approved public B2B acquisition; preview remains test-only.
+const PRODUCTION=true;
 const productionIds=new Set(["b2b_spectacle_a","b2b_backstage","b2b_complementary","b2b_special"]);
 const allowedPreview=/^https:\/\/grandfocus-site-[a-z0-9-]+-nettu-s-projects\.vercel\.app$/;
 const mapping={b2b_spectacle_a:["b2b","a","espetaculo"],b2b_spectacle_b:["b2b","b","espetaculo"],b2b_backstage:["b2b","original","bastidores"],b2b_complementary:["b2b","original","outras_experiencias"],b2b_special:["b2b","original","experiencias_especiais"],b2b_school_christmas:["b2b","original","natal_escola"],b2c_dance_interest:["b2c","original","ensaio_danca"]};
