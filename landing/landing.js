@@ -12,7 +12,8 @@
   const storage={get(k){try{return sessionStorage.getItem(k)}catch{return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch{}}};
   const consentSaved=storage.get(prefKey);
   function enableTag(){
-    if(!live||!c.adsEnabled||!allowed||tagReady||f.dataset.funnel!=="b2b")return;
+    if(!live||!c.adsEnabled||!allowed||f.dataset.funnel!=="b2b")return;
+    if(tagReady){window.gtag?.("consent","update",{ad_storage:"granted",analytics_storage:"denied",ad_user_data:"granted",ad_personalization:"denied"});return;}
     window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments)};
     window.gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
     window.gtag("consent","update",{ad_storage:"granted",analytics_storage:"denied",ad_user_data:"granted",ad_personalization:"denied"});
@@ -20,7 +21,7 @@
     const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+encodeURIComponent(c.adsTag);document.head.appendChild(s);tagReady=true
   }
   function preference(v){const wasAllowed=allowed;allowed=v;storage.set(prefKey,v?"yes":"no");privacy.hidden=true;if(v)enableTag();else if(tagReady&&wasAllowed){window.gtag?.("consent","update",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});}}
-  if(consentSaved==="yes"||consentSaved==="no")preference(consentSaved==="yes");else privacy.hidden=!live;
+  if(consentSaved==="yes"||consentSaved==="no")preference(consentSaved==="yes");else privacy.hidden=!(live||preview);
   document.getElementById("consent-no").onclick=()=>preference(false);
   document.getElementById("consent-yes").onclick=()=>preference(true);
   document.getElementById("privacy-settings").onclick=()=>{privacy.hidden=false;privacy.scrollIntoView({block:"nearest"})};
@@ -63,6 +64,7 @@
         event(f.dataset.funnel==="b2b"?"gf_b2b_lead_success":"gf_b2c_interest_success");
       }
       document.getElementById("form-content").hidden=true;
+      const consentHost=document.getElementById("interesse");if(consentHost){consentHost.appendChild(privacy);privacy.hidden=true;}
       const thanks=document.getElementById("thank-you");thanks.hidden=false;
       document.getElementById("success-detail").textContent=!live?"Cadastro fictício confirmado. Nenhuma conversão enviada.":!result.created?"Seu interesse já estava registrado.":"Obrigado pela confiança.";
       const wa=document.getElementById("whatsapp-next");

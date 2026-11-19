@@ -24,5 +24,22 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/escolas/espetaculos",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/escolas/espetaculos-b",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/escolas/natal",
+      "destination": "/especiais/",
+      "permanent": true
+    }
   ]
 }
