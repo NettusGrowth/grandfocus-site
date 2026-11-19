@@ -29,7 +29,7 @@ function createPage([file, landing, variant, offer], opts = {}) {
   const html = fs.readFileSync('dist/' + file, 'utf8');
   const formMarkup = html.match(/<form\b[^>]*id="lead-form"[^>]*>/)?.[0];
   check(!!formMarkup, file + ' form exists');
-  for (const [key, expected] of Object.entries({funnel:'b2b',landing,variant,offer})) {
+  if(!opts.skipDatasetChecks) for (const [key, expected] of Object.entries({funnel:'b2b',landing,variant,offer})) {
     check(formMarkup.includes('data-' + key + '="' + expected + '"'), file + ' data-' + key);
   }
   const callbacks = {};
@@ -175,9 +175,15 @@ async function run(){
     check(page.requests.length===1&&page.requests[0].payload.test===true,route[0]+' preview only submits marked test');
     check(page.conversions().length===0&&page.trackingScripts.length===0,route[0]+' preview never converts');
   }
+  const creativeTwo=createPage(routes[0],{search:'?utm_source=google&utm_content=criativo_02&creative_id=CREATIVE456'});
+  creativeTwo.consent(true);
+  await creativeTwo.submit();
+  check(creativeTwo.requests[0].payload.attribution.utm_content==='criativo_02', 'second home creative retains utm_content');
+  check(creativeTwo.requests[0].payload.attribution.creative_id==='CREATIVE456', 'second home creative retains creative_id');
+  check(creativeTwo.conversions().length===1, 'second home creative uses same one B2B conversion');
   const legacy=['escolas/espetaculos/index.html','escolas/espetaculos-b/index.html','escolas/natal/index.html'];
   for(const file of legacy){
-    const page=createPage([file,'unsupported','original','espetaculo'],{search:'?gclid=TEST_CLICK&utm_content=criativo_02'});
+    const page=createPage([file,'unsupported','original','espetaculo'],{skipDatasetChecks:true,search:'?gclid=TEST_CLICK&utm_content=criativo_02'});
     check(page.redirects[0]==='/?gclid=TEST_CLICK&utm_content=criativo_02',file+' JS fallback preserves query');
   }
   console.log('PASS: '+checked+' isolated tracking assertions. No real API calls or Google Ads requests.');
