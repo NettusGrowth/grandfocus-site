@@ -24,6 +24,11 @@ body.gf-spectacle::before{content:"";position:fixed;inset:0;z-index:-1;pointer-e
 .gf-hero-slide{flex:0 0 100%;height:100%;min-width:0;position:relative;scroll-snap-align:center;scroll-snap-stop:always;overflow:hidden;background:#080608}
 .gf-hero-slide img,.gf-hero-slide img.spectacle-cover{display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;object-position:center;user-select:none;-webkit-user-drag:none}
 .gf-spectacle .offer>img.spectacle-cover{aspect-ratio:3/2;object-fit:contain;background:#080608}
-@media(min-width:1000px){body.gf-spectacle::before{background-size:auto,auto 115%;background-position:center,calc(50% + 470px) 46%}.gf-spectacle .composition{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media(min-width:761px){body.gf-spectacle::before{background:linear-gradient(180deg,rgba(8,6,8,.12),rgba(8,6,8,.26)),url("/assets/fundo-bailarina-desktop.webp") center center/cover no-repeat #080608}}
+@media(min-width:1000px){.gf-spectacle .composition{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 @media(max-width:760px){.gf-spectacle .header-inner{min-height:68px}.gf-spectacle .brand-lockup img{width:145px;height:47px}.gf-spectacle .header-note{font-size:10px;padding:8px 10px;text-align:center}.gf-spectacle .shell{margin-top:12px}body.gf-spectacle::before{background:linear-gradient(180deg,#100b0e99,#100b0ebd),url("/assets/espetaculos-carousel/foto-10.webp") center top/cover no-repeat #100b0e}}
 @media(prefers-reduced-motion:reduce){.gf-hero-track{scroll-behavior:auto!important}}
+
+/* Portrait photographs blend into the dark slide only at the actual photo edges. */
+.gf-hero-slide.gf-portrait{display:flex;justify-content:center;align-items:center}
+.gf-hero-slide.gf-portrait img{flex:0 0 auto;width:auto;height:100%;max-width:100%;object-fit:contain;-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.82) 3%,#000 7%,#000 93%,rgba(0,0,0,.82) 97%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.82) 3%,#000 7%,#000 93%,rgba(0,0,0,.82) 97%,transparent 100%)}

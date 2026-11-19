@@ -8,7 +8,7 @@ const wrap=make("div","gf-hero-carousel"),track=make("div","gf-hero-track");
 wrap.setAttribute("role","region");wrap.setAttribute("aria-roledescription","carrossel");wrap.setAttribute("aria-label","Fotografias da Grand Focus");
 track.tabIndex=0;track.setAttribute("aria-label","Arraste ou use as setas do teclado para navegar pelas fotos");
 first.before(wrap);wrap.append(track);
-const images=slides.map((data,i)=>{const panel=make("div","gf-hero-slide");panel.setAttribute("role","group");panel.setAttribute("aria-label",(i+1)+" de "+N);const img=i===0?first:make("img");img.alt=data.alt;img.width=data.width;img.height=data.height;img.decoding="async";img.draggable=false;if(i>0){img.dataset.src=data.src;img.fetchPriority="low"}panel.append(img);track.append(panel);return img});
+const images=slides.map((data,i)=>{const panel=make("div","gf-hero-slide");if(data.height>data.width)panel.classList.add("gf-portrait");panel.setAttribute("role","group");panel.setAttribute("aria-label",(i+1)+" de "+N);const img=i===0?first:make("img");img.alt=data.alt;img.width=data.width;img.height=data.height;img.decoding="async";img.draggable=false;if(i>0){img.dataset.src=data.src;img.fetchPriority="low"}panel.append(img);track.append(panel);return img});
 function load(i){const img=images[(i+N)%N];if(img.dataset.src){img.src=img.dataset.src;delete img.dataset.src}}
 function draw(i){index=Math.min(N-1,Math.max(0,i));load(index);load(index+1);load(index-1)}
 function nearest(){return Math.min(N-1,Math.max(0,Math.round(track.scrollLeft/Math.max(1,track.clientWidth))))}
