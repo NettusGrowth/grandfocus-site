@@ -32,3 +32,9 @@ body.gf-spectacle::before{content:"";position:fixed;inset:0;z-index:-1;pointer-e
 /* Portrait photographs blend into the dark slide only at the actual photo edges. */
 .gf-hero-slide.gf-portrait{display:flex;justify-content:center;align-items:center}
 .gf-hero-slide.gf-portrait img{flex:0 0 auto;width:auto;height:100%;max-width:100%;object-fit:contain;-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.82) 3%,#000 7%,#000 93%,rgba(0,0,0,.82) 97%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.82) 3%,#000 7%,#000 93%,rgba(0,0,0,.82) 97%,transparent 100%)}
+
+/* Integrated masthead — no separate strip or secondary call to action. */
+.gf-spectacle .gf-integrated-brand{width:min(100% - 32px,1000px);margin:0 auto;padding:23px 0 11px;display:flex;justify-content:center;align-items:center;background:transparent;border:0;box-shadow:none}
+.gf-integrated-brand img{display:block;width:clamp(176px,20vw,216px);height:auto;max-height:72px;object-fit:contain;filter:drop-shadow(0 2px 9px rgba(0,0,0,.22))}
+.gf-spectacle .shell{margin-top:10px}
+@media(max-width:760px){.gf-spectacle .gf-integrated-brand{width:calc(100% - 22px);padding:15px 0 7px}.gf-integrated-brand img{width:158px;max-height:48px}.gf-spectacle .shell{margin-top:6px}}
