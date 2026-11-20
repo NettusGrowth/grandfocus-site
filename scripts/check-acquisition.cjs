@@ -50,10 +50,10 @@ const config = fs.readFileSync(path.join('dist', 'landing/config.js'), 'utf8');
 const handler = fs.readFileSync(path.join('dist', 'landing/landing.js'), 'utf8');
 requireTrue(/launchApproved:true/.test(config), 'Launch configuration is unexpectedly disabled');
 requireTrue(/adsEnabled:true/.test(config), 'Existing ad measurement configuration unexpectedly disabled');
-requireTrue(/\bga4:null\b/.test(config), 'GA4 setting changed: confirm actual measurement ID before release');
+requireTrue(/\bga4:\"G-LR3Q5N8R07\"/.test(config) && /\banalyticsEnabled:false/.test(config), 'Verified GA4 ID must be stored but analytics inactive until consent review');
 requireTrue(/\bgtm:null\b/.test(config), 'GTM setting changed: confirm actual container ID before release');
-requireTrue(handler.includes('if(!live||!allowed)return'), 'Consent gate missing from measurement events');
-requireTrue(handler.includes('if(!live||!c.adsEnabled||!allowed'), 'Consent gate missing from ad tag initialization');
+requireTrue(handler.includes('if(!live||!allowed||!tagReady||!analyticsConfigured)return'), 'Consent gate missing from measurement events');
+requireTrue(handler.includes('if(!live||!allowed||f.dataset.funnel!=="b2b"||(!c.adsEnabled&&!analyticsConfigured))return'), 'Consent gate missing from tag initialization');
 requireTrue(handler.includes('if(result.created)'), 'Conversion must only count newly created leads');
 requireTrue(handler.includes('transaction_id:result.leadId'), 'Conversion deduplication ID missing');
 if (errors.length) {

@@ -91,7 +91,8 @@ function createPage([file, landing, variant, offer], opts = {}) {
     if(opts.throwNetwork)throw new Error('simulated network error');
     return {ok:opts.httpOk!==false,json:async()=>opts.response ?? {ok:true,created:true,leadId}};
   }};
-  vm.runInNewContext(originalConfig,context,{timeout:1000,filename:'landing/config.js'});
+  const simulatedConfig=opts.ga4Enabled?originalConfig.replace('ga4:"G-LR3Q5N8R07",analyticsEnabled:false,gtm:null','ga4:"G-TEST1234",analyticsEnabled:true,gtm:null'):originalConfig;
+  vm.runInNewContext(simulatedConfig,context,{timeout:1000,filename:'landing/config.js'});
   if(opts.savedConsent)fakeStorage.set('gf-marketing-consent-'+window.GF_LANDING_CONFIG.policyVersion,opts.savedConsent);
   vm.runInNewContext(originalClient,context,{timeout:1000,filename:'landing/landing.js'});
   return {
@@ -100,14 +101,15 @@ function createPage([file, landing, variant, offer], opts = {}) {
     async submit(){if(!callbacks.submit)return;await callbacks.submit({preventDefault(){}});},
     conversions(){return (window.dataLayer||[]).filter(args=>args[0]==='event'&&args[1]==='conversion').map(args=>args[2]);},
     tagConfigs(){return (window.dataLayer||[]).filter(args=>args[0]==='config');},
-    consentCalls(){return (window.dataLayer||[]).filter(args=>args[0]==='consent');}
+    consentCalls(){return (window.dataLayer||[]).filter(args=>args[0]==='consent');},
+    ga4Events(){return (window.dataLayer||[]).filter(args=>args[0]==='event'&&args[2]?.send_to==='G-TEST1234');}
   };
 }
 
 async function run(){
   check(originalConfig.includes('adsTag:"AW-11436117910"'),'correct existing Google Ads tag');
   check(originalConfig.includes('adsDestination:"AW-11436117910/Cio6CNyCibsdEJaflc0q"'),'correct existing conversion destination');
-  check(originalConfig.includes('ga4:null')&&originalConfig.includes('gtm:null'),'GA4 and GTM disabled pending verification');
+  check(originalConfig.includes('ga4:"G-LR3Q5N8R07",analyticsEnabled:false,gtm:null'),'Verified GA4 ID is stored but tracking remains disabled pending consent review');
   for (const route of routes) {
     let page = createPage(route);
     check(page.trackingScripts.length===0,route[0]+' no tag before consent');
@@ -174,6 +176,34 @@ async function run(){
     await page.submit();
     check(page.requests.length===1&&page.requests[0].payload.test===true,route[0]+' preview only submits marked test');
     check(page.conversions().length===0&&page.trackingScripts.length===0,route[0]+' preview never converts');
+  }
+
+  for (const route of routes) {
+    let page=createPage(route,{ga4Enabled:true});
+    check(page.trackingScripts.length===0&&page.ga4Events().length===0,route[0]+' GA4 opt-in mode does not track before consent');
+    page.consent(true);
+    check(page.trackingScripts.length===1,route[0]+' GA4 and Ads share one gtag script');
+    check(page.tagConfigs().length===2,route[0]+' GA4 and Ads configured once each');
+    check(page.tagConfigs()[1][1]==='G-TEST1234'&&page.tagConfigs()[1][2].send_page_view===false,route[0]+' GA4 identified and automatic pageview off');
+    check(page.consentCalls().at(-1)[2].analytics_storage==='granted',route[0]+' GA4 storage granted after consent');
+    check(page.ga4Events().filter(e=>e[1]==='page_view').length===1,route[0]+' exactly one GA4 pageview');
+    check(page.ga4Events().filter(e=>e[1]==='gf_landing_view').length===1,route[0]+' GA4 landing view event');
+    await page.submit();
+    check(page.conversions().length===1,route[0]+' existing Ads conversion remains independent of GA4');
+    check(page.ga4Events().filter(e=>e[1]==='gf_b2b_lead_success').length===1,route[0]+' GA4 lead success only after API');
+    check(page.ga4Events().every(e=>Object.keys(e[2]).every(k=>!['name','phone','school_name','email'].includes(k))),route[0]+' GA4 events omit personal data');
+    page.consent(false);
+    check(page.consentCalls().at(-1)[2].analytics_storage==='denied',route[0]+' GA4 revocation denies analytics storage');
+    page.consent(true);
+    check(page.trackingScripts.length===1&&page.ga4Events().filter(e=>e[1]==='page_view').length===1,route[0]+' GA4 reaccept no duplicate pageview/script');
+
+    page=createPage(route,{ga4Enabled:true,response:{ok:true,leadId,created:false}});
+    page.consent(true);
+    await page.submit();
+    check(page.ga4Events().every(e=>e[1]!=='gf_b2b_lead_success'),route[0]+' GA4 duplicate lead not converted');
+    page=createPage(route,{ga4Enabled:true,preview:true});
+    page.consent(true);
+    check(page.trackingScripts.length===0&&page.ga4Events().length===0,route[0]+' GA4 disabled on preview');
   }
   const creativeTwo=createPage(routes[0],{search:'?utm_source=google&utm_content=criativo_02&creative_id=CREATIVE456'});
   creativeTwo.consent(true);
