@@ -8,17 +8,30 @@
   const preview=/^grandfocus-site-[a-z0-9-]+-nettu-s-projects\.vercel\.app$/.test(location.hostname);
   if(prod&&!supported){location.replace('/'+location.search);return;}
   const privacy=document.getElementById("consent"),msg=document.getElementById("form-message"),submit=f.querySelector("[type=submit]");
-  const prefKey="gf-marketing-consent-"+c.policyVersion;let allowed=false,tagReady=false,busy=false,key=null,lastPayload=null,started=false,emitted=new Set();
+  const prefKey="gf-marketing-consent-"+c.policyVersion;
+  // GA4 remains OFF until a verified measurement ID and analytics-specific consent are configured.
+  const analyticsConfigured=c.analyticsEnabled===true&&typeof c.ga4==="string"&&/^G-[A-Z0-9]+$/.test(c.ga4);
+  let allowed=false,tagReady=false,analyticsPageSent=false,busy=false,key=null,lastPayload=null,started=false,emitted=new Set();
   const storage={get(k){try{return sessionStorage.getItem(k)}catch{return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch{}}};
   const consentSaved=storage.get(prefKey);
+  function sendAnalyticsPage(){
+    if(analyticsPageSent||!analyticsConfigured)return;
+    analyticsPageSent=true;
+    event("page_view");
+    event("gf_landing_view");
+  }
   function enableTag(){
-    if(!live||!c.adsEnabled||!allowed||f.dataset.funnel!=="b2b")return;
-    if(tagReady){window.gtag?.("consent","update",{ad_storage:"granted",analytics_storage:"denied",ad_user_data:"granted",ad_personalization:"denied"});return;}
+    if(!live||!allowed||f.dataset.funnel!=="b2b"||(!c.adsEnabled&&!analyticsConfigured))return;
+    const mode={ad_storage:c.adsEnabled?"granted":"denied",analytics_storage:analyticsConfigured?"granted":"denied",ad_user_data:c.adsEnabled?"granted":"denied",ad_personalization:"denied"};
+    if(tagReady){window.gtag?.("consent","update",mode);sendAnalyticsPage();return;}
     window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments)};
     window.gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
-    window.gtag("consent","update",{ad_storage:"granted",analytics_storage:"denied",ad_user_data:"granted",ad_personalization:"denied"});
-    window.gtag("js",new Date());window.gtag("config",c.adsTag,{send_page_view:false,allow_ad_personalization_signals:false});
-    const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+encodeURIComponent(c.adsTag);document.head.appendChild(s);tagReady=true
+    window.gtag("consent","update",mode);
+    window.gtag("js",new Date());
+    if(c.adsEnabled)window.gtag("config",c.adsTag,{send_page_view:false,allow_ad_personalization_signals:false});
+    if(analyticsConfigured)window.gtag("config",c.ga4,{send_page_view:false,allow_google_signals:false,allow_ad_personalization_signals:false});
+    const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+encodeURIComponent(c.adsEnabled?c.adsTag:c.ga4);document.head.appendChild(s);tagReady=true;
+    sendAnalyticsPage();
   }
   function preference(v){const wasAllowed=allowed;allowed=v;storage.set(prefKey,v?"yes":"no");privacy.hidden=true;if(v)enableTag();else if(tagReady&&wasAllowed){window.gtag?.("consent","update",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});}}
   if(consentSaved==="yes"||consentSaved==="no")preference(consentSaved==="yes");else privacy.hidden=!(live||preview);
@@ -26,11 +39,10 @@
   document.getElementById("consent-yes").onclick=()=>preference(true);
   document.getElementById("privacy-settings").onclick=()=>{privacy.hidden=false;privacy.scrollIntoView({block:"nearest"})};
   function event(name,params={}){
-    if(!live||!allowed)return;
-    // GA4/GTM not installed until verified IDs have been supplied.
-    if(c.ga4&&typeof window.gtag==="function")window.gtag("event",name,{funnel:f.dataset.funnel,landing_id:f.dataset.landing,variant_id:f.dataset.variant,offer_type:f.dataset.offer,...params})
+    if(!live||!allowed||!tagReady||!analyticsConfigured)return;
+    // Route custom analytics events only to the verified GA4 destination, never the Ads conversion.
+    window.gtag?.("event",name,{send_to:c.ga4,funnel:f.dataset.funnel,landing_id:f.dataset.landing,variant_id:f.dataset.variant,offer_type:f.dataset.offer,...params});
   }
-  event("gf_landing_view");
   document.querySelectorAll('a[href="#interesse"]').forEach(a=>a.addEventListener("click",()=>event("gf_cta_click")));
   f.addEventListener("input",()=>{if(!started){started=true;event("gf_form_start")}});
   function attribution(){
