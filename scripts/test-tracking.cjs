@@ -91,7 +91,7 @@ function createPage([file, landing, variant, offer], opts = {}) {
     if(opts.throwNetwork)throw new Error('simulated network error');
     return {ok:opts.httpOk!==false,json:async()=>opts.response ?? {ok:true,created:true,leadId}};
   }};
-  const simulatedConfig=opts.ga4Enabled?originalConfig.replace('ga4:"G-LR3Q5N8R07",analyticsEnabled:false,gtm:null','ga4:"G-TEST1234",analyticsEnabled:true,gtm:null'):originalConfig;
+  const simulatedConfig=opts.ga4Enabled?originalConfig.replace('ga4:"G-LR3Q5N8R07",analyticsEnabled:true,gtm:null','ga4:"G-TEST1234",analyticsEnabled:true,gtm:null'):originalConfig.replace('analyticsEnabled:true,gtm:null','analyticsEnabled:false,gtm:null');
   vm.runInNewContext(simulatedConfig,context,{timeout:1000,filename:'landing/config.js'});
   if(opts.savedConsent)fakeStorage.set('gf-marketing-consent-'+window.GF_LANDING_CONFIG.policyVersion,opts.savedConsent);
   vm.runInNewContext(originalClient,context,{timeout:1000,filename:'landing/landing.js'});
@@ -109,7 +109,9 @@ function createPage([file, landing, variant, offer], opts = {}) {
 async function run(){
   check(originalConfig.includes('adsTag:"AW-11436117910"'),'correct existing Google Ads tag');
   check(originalConfig.includes('adsDestination:"AW-11436117910/Cio6CNyCibsdEJaflc0q"'),'correct existing conversion destination');
-  check(originalConfig.includes('ga4:"G-LR3Q5N8R07",analyticsEnabled:false,gtm:null'),'Verified GA4 ID is stored but tracking remains disabled pending consent review');
+  check(originalConfig.includes('ga4:"G-LR3Q5N8R07",analyticsEnabled:true,gtm:null'),'Verified GA4 measurement enabled with a single Google tag');
+  check(originalConfig.includes('policyVersion:"2026-11-19.3"'),'Prior advertising-only consent must be renewed before GA4 measurement');
+  for(const route of routes){const html=fs.readFileSync('dist/'+route[0],'utf8');check(html.includes('Google Analytics para entender as visitas e Google Ads para medir nossos anúncios'),route[0]+' consent includes both analytics and advertising');}
   for (const route of routes) {
     let page = createPage(route);
     check(page.trackingScripts.length===0,route[0]+' no tag before consent');
